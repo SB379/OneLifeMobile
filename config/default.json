@@ -1,0 +1,4 @@
+{
+    "mongoURI":
+      "mongodb+srv://SB379:fuckinglive@onelifecluster.qhgusdm.mongodb.net/one_life_mobile?retryWrites=true&w=majority"
+}
