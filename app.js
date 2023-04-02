@@ -20,6 +20,7 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 app.use('/api/experiences', experiences)
 app.use('/api/users', users);
+app.use('/api/places', places)
 
 const port = process.env.PORT || 8082;
 
