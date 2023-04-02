@@ -58,7 +58,7 @@ function runScriptOnce() {
           description: "",
         });
 
-        place.save((error) => {
+        await place.save((error) => {
           if (error) {
             console.error(error);
           }
