@@ -20,7 +20,7 @@ const placeSchema = new mongoose.Schema({
   tags: [],
   image_url: String,
   description: String,
-}, {collection: 'nyc'});
+}, {collection: 'experiences'});
 
 // Create Place model
 const Place = mongoose.model('Place', placeSchema);
@@ -58,7 +58,7 @@ function runScriptOnce() {
           description: "",
         });
 
-        await place.save((error) => {
+        place.save((error) => {
           if (error) {
             console.error(error);
           }
