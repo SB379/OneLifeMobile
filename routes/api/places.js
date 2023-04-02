@@ -32,36 +32,40 @@ const params = {
   key: process.env.GOOGLE_API_KEY
 };
 
-// Make request to Places API
-axios.get(endpoint, { params })
-  .then(response => {
-    // Loop through results and store data in database
-    response.data.results.forEach(result => {
+function runScriptOnce() {
+  // Make request to Places API
+  axios.get(endpoint, { params })
+    .then(response => {
+      // Loop through results and store data in database
+      response.data.results.forEach(result => {
 
-    const addressComponents = result.formatted_address.split(', ');
-      const address = {
-        street: addressComponents[0],
-        city: addressComponents[1],
-        state: addressComponents[2].split(' ')[0],
-        zip: addressComponents[2].split(' ')[1]
-      };
+      const addressComponents = result.formatted_address.split(', ');
+        const address = {
+          street: addressComponents[0],
+          city: addressComponents[1],
+          state: addressComponents[2].split(' ')[0],
+          zip: addressComponents[2].split(' ')[1]
+        };
 
-      const place = new Place({
-        name: result.name,
-        address: address,
-        url: result.website,
-        tags: [],
-        image_url: "",
-        description: "",
+        const place = new Place({
+          name: result.name,
+          address: address,
+          url: result.website,
+          tags: [],
+          image_url: "",
+          description: "",
+        });
+
+        place.save((error) => {
+          if (error) {
+            console.error(error);
+          }
+        });
       });
-
-      place.save((error) => {
-        if (error) {
-          console.error(error);
-        }
-      });
+    })
+    .catch(error => {
+      console.error(error);
     });
-  })
-  .catch(error => {
-    console.error(error);
-  });
+}
+
+runScriptOnce();
