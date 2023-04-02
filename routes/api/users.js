@@ -147,6 +147,31 @@ router.get('/', (req, res) => {
       res.json({message: "Incorrect Token Given", isLoggedIn: false, token: token})
     }
   }
+
+  // @route POST api/users/saved
+  // @description add saved experiences to bucket list
+  // @access Public
+
+  router.post('/saved', async (req, res) => {
+    const userId = req.body.userId;
+    const experienceId = req.body.experienceId;
+  
+    try {
+      // Find the user by their ID
+      const user = await User.findById(userId);
+  
+      // Add the experience to the user's saved items array
+      user.savedItems.push(experienceId);
+  
+      // Save the updated user object to the database
+      await user.save();
+  
+      res.status(200).json({ message: 'Experience saved successfully!' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to save experience.' });
+    }
+  });
   
   
   module.exports = router;
