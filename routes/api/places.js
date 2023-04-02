@@ -20,7 +20,7 @@ const placeSchema = new mongoose.Schema({
   tags: [],
   image_url: String,
   description: String,
-}, {collection: 'nyc'});
+}, {collection: 'experiences'});
 
 // Create Place model
 const Place = mongoose.model('Place', placeSchema);
