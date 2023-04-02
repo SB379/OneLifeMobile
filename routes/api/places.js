@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 // Connect to MongoDB database
 mongoose.connect(process.env.MONGO_URI);
 
+console.log("This connected")
+
 // Define schema for Place model
 const placeSchema = new mongoose.Schema({
   name: String,
