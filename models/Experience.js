@@ -45,6 +45,6 @@ const ExperienceSchema = new mongoose.Schema({
         type: Array,
         required: true,
     },
-}, {collection: 'nyc'});
+}, {collection: 'experiences'});
 
 module.exports = Experience = mongoose.model('experience', ExperienceSchema);

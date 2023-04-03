@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 
 const experiences = require('./routes/api/experiences');
 const users = require('./routes/api/users')
+const places = require('./routes/api/places')
 
 const app = express();
 
