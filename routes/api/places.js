@@ -104,6 +104,6 @@ async function runScript() {
     console.log("Finished adding Experiences");
   }
   
-runScript();
+// runScript();
   
 module.exports = router;
