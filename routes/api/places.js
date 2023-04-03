@@ -43,7 +43,7 @@ async function runScript() {
     // Make request to Places API
     let pageToken = "";
     let numSaved = 0;
-    while (numSaved < 20) {
+    while (numSaved < 500) {
       const response = await axios.get(endpoint, { params: { ...params, pagetoken: pageToken } });
   
       // Loop through results and store data in database
