@@ -161,7 +161,7 @@ router.get('/', (req, res) => {
       const user = await User.findById(userId);
   
       // Add the experience to the user's saved items array
-      user.savedItems.push(experienceId);
+      user.saved.push(experienceId);
   
       // Save the updated user object to the database
       await user.save();
