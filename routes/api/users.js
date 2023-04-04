@@ -160,18 +160,24 @@ router.get('/', (req, res) => {
       // Find the user by their ID
       const user = await User.findById(userId);
   
-      // Add the experience to the user's saved items array
-      user.saved.push(experienceId);
+      // Check if the experience is already in the user's saved items array
+      if (user.saved.includes(experienceId)) {
+        res.status(400).json({ message: 'Experience is already saved!' });
+      } else {
+        // Add the experience to the user's saved items array
+        user.saved.push(experienceId);
   
-      // Save the updated user object to the database
-      await user.save();
+        // Save the updated user object to the database
+        await user.save();
   
-      res.status(200).json({ message: 'Experience saved successfully!' });
+        res.status(200).json({ message: 'Experience saved successfully!' });
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Failed to save experience.' });
     }
   });
+  
   
   
   module.exports = router;
