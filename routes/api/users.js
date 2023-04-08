@@ -194,7 +194,7 @@ router.get('/', (req, res) => {
   });
 
 
-  router.delete('/saved', async (req, res) => {
+  router.delete('/unsaved', async (req, res) => {
     const userId = req.body.userId;
     const experienceId = req.body.experienceId;
 
