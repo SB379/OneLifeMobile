@@ -194,11 +194,9 @@ router.get('/', (req, res) => {
   });
 
 
-  router.delete('/unsaved', async (req, res) => {
-    const userId = req.body.userId;
-    const experienceId = req.body.experienceId;
-
-    console.log(userId);
+  router.delete('/unsaved/${id}/${exp}', async (req, res) => {
+    const userId = id;
+    const experienceId = exp;
   
     try {
       // Find the user by their ID
@@ -222,8 +220,5 @@ router.get('/', (req, res) => {
     }
   });
   
-  
-  
-  
-  
+
   module.exports = router;
