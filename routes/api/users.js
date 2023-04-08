@@ -194,9 +194,9 @@ router.get('/', (req, res) => {
   });
 
 
-  router.delete('/unsaved/${id}/${exp}', async (req, res) => {
-    const userId = id;
-    const experienceId = exp;
+  router.delete('/unsaved/:id/:exp', async (req, res) => {
+    const userId = req.params.id;
+    const experienceId = req.params.exp;
   
     try {
       // Find the user by their ID
@@ -219,6 +219,7 @@ router.get('/', (req, res) => {
       res.status(500).json({ message: 'Failed to remove experience from saved items.' });
     }
   });
+  
   
 
   module.exports = router;
