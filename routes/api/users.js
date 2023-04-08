@@ -192,6 +192,33 @@ router.get('/', (req, res) => {
       res.status(500).json({ message: 'Failed to save experience.' });
     }
   });
+
+
+  router.delete('/saved/:experienceId', async (req, res) => {
+    const experienceId = req.params.experienceId;
+  
+    try {
+      // Find the user by their ID
+      const user = await User.findById(req.user.id);
+  
+      // Check if the experience is already in the user's saved items array
+      if (user.saved.includes(experienceId)) {
+        // Remove the experience from the user's saved items array
+        user.saved = user.saved.filter(savedExperienceId => savedExperienceId !== experienceId);
+  
+        // Save the updated user object to the database
+        await user.save();
+  
+        res.status(200).json({ message: 'Experience removed from saved items!' });
+      } else {
+        res.status(400).json({ message: 'Experience is not in saved items!' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to remove experience from saved items.' });
+    }
+  });
+  
   
   
   
