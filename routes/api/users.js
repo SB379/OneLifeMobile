@@ -194,12 +194,13 @@ router.get('/', (req, res) => {
   });
 
 
-  router.delete('/saved/:experienceId', async (req, res) => {
-    const experienceId = req.params.experienceId;
+  router.delete('/saved', async (req, res) => {
+    const userId = req.body.userId;
+    const experienceId = req.body.experienceId;
   
     try {
       // Find the user by their ID
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(userId);
   
       // Check if the experience is already in the user's saved items array
       if (user.saved.includes(experienceId)) {
@@ -218,6 +219,7 @@ router.get('/', (req, res) => {
       res.status(500).json({ message: 'Failed to remove experience from saved items.' });
     }
   });
+  
   
   
   
