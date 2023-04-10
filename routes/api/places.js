@@ -157,5 +157,7 @@ async function runScript() {
       return "";
     }
   } 
+
+  runScript();
   
 module.exports = router;
