@@ -113,7 +113,7 @@ const client = new openai.OpenAIApi({
   // Function to generate tags using GPT-3.5 API
   async function generateTags(text) {
     try {
-      const response = await client.complete({
+      const response = await client.createCompletion({
         prompt: `Generate 5 tags for the following text: ${text}`,
       });
   
@@ -134,7 +134,7 @@ const client = new openai.OpenAIApi({
 
     try {
         // generate description using GPT-3.5 API
-        const response = await client.complete({
+        const response = await client.createCompletion({
         engine: 'gpt-3.5-turbo',
         prompt,
         maxTokens: 128,
