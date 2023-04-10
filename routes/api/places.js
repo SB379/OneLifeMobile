@@ -48,7 +48,7 @@ const client = new openai.OpenAIApi({
     temperature: 0.5,
   });
 
-async function runScript() {
+  async function runScript() {
     // Make request to Places API
     let pageToken = "";
     let numSaved = 0;
@@ -96,10 +96,6 @@ async function runScript() {
         } catch (error) {
           console.error(error);
         }
-  
-        if (numSaved === 20) {
-          break;
-        }
       }
   
       if (!response.data.next_page_token) {
@@ -112,6 +108,7 @@ async function runScript() {
   
     console.log("Finished adding Experiences");
   }
+  
   
   // Function to generate tags using GPT-3.5 API
   async function generateTags(text) {
