@@ -41,7 +41,7 @@ const params = {
   key: process.env.GOOGLE_API_KEY
 };
 
-const client = new openai.GPT3({
+const client = new openai.OpenAIApi({
     apiKey: process.env.GPT_KEY,
     engine: 'gpt-3.5-turbo',
     maxTokens: 5,
