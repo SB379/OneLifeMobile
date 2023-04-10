@@ -35,7 +35,7 @@ const Place = mongoose.model('Place', placeSchema);
 // Define API endpoint and search parameters
 const endpoint = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
 const params = {
-  query: 'restaurants',
+  query: 'bars',
   location: '40.7128,-74.0060', // New York City
   radius: 10000,
   key: process.env.GOOGLE_API_KEY
