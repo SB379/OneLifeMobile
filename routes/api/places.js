@@ -130,24 +130,25 @@ const client = new openai.OpenAIApi({
   // Function to generate description using GPT-3.5 API
   const generateDescription = async (reviews) => {
     // construct prompt using reviews
-  const prompt = `Please write a brief description of this place based on the following reviews:\n\n${reviews.slice(0, 5).map(r => `"${r.text}"`).join('\n')}\n\nDescription:`;
-  
-  try {
-    // generate description using GPT-3.5 API
-    const response = await promisify(client.complete.bind(client))({
-      prompt,
-      maxTokens: 128,
-      temperature: 0.7,
-      n: 1,
-      stop: '.'
-    });
-      
-    // extract and return generated description from response
-    return response.choices[0].text.trim();
-  } catch (error) {
-    console.error(`Error generating description: ${error}`);
-    return "";
-  }
+    const prompt = `Please write a brief description of this place based on the following reviews:\n\n${reviews.slice(0, 5).map(r => `"${r.text}"`).join('\n')}\n\nDescription:`;
+
+    try {
+        // generate description using GPT-3.5 API
+        const response = await client.complete({
+        engine: 'gpt-3.5-turbo',
+        prompt,
+        maxTokens: 128,
+        temperature: 0.7,
+        n: 1,
+        stop: '.'
+        });
+        
+        // extract and return generated description from response
+        return response.data.choices[0].text.trim();
+    } catch (error) {
+        console.error(`Error generating description: ${error}`);
+        return "";
+    }
   } 
 
   runScript();
