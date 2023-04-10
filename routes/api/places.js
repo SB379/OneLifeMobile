@@ -75,10 +75,12 @@ const client = new openai.OpenAIApi({
         const photo = result.photos && result.photos.length > 0 ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${result.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : "";
   
         // Call GPT-3.5 API to generate tags
-        const tags = await generateTags(result.name);
+        // const tags = await generateTags(result.name);
+        const tags = [];
   
         // Call GPT-3.5 API to generate description
-        const description = await generateDescription(result.reviews.slice(0, 5));
+        // const description = await generateDescription(result.reviews.slice(0, 5));
+        const description = "";
   
         const place = new Place({
           name: result.name,
