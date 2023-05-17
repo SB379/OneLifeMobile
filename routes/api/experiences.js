@@ -3,6 +3,16 @@ const router = express.Router();
 
 const Experience = require('../../models/Experience');
 
+require('dotenv').config();
+
+import { Configuration, OpenAIAPI } from "openai";
+
+const configuration = new Configuration({
+  organization: process.env.GPT_ORG,
+  apiKey: process.env.GPT_KEY,
+});
+
+const openai = new OpenAIAPI(configuration);
 
 //@route GET api/experiences/test
 //@description tests experiences route
@@ -13,9 +23,14 @@ router.get('/test', (req,res) => res.send('experience route testing'));
 //@description Get all experiences
 //@access Public
 router.get('/', (req, res) => {
-    Experience.find()
-        .then(experiences => res.json(experiences))
-        .catch(err => res.status(404).json({noexperiencesfound: "No experiences found"}))
+  const response = openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {role: "user", content: "Given these five tags, give me a query for the Google Maps Places API: `${JSON.Stringify(req.params.answers)}`"}
+    ]
+  })
+
+  res.json(response);
 });
 
 // @route GET api/experiences/:id
@@ -26,6 +41,29 @@ router.get('/:id', (req, res) => {
       .then(experiences => res.json(experiences))
       .catch(err => res.status(404).json({ noexperiencesfound: 'No Experience found' }));
   });
+
+// async function sendPromptToGPT(prompt) {
+//   try {
+//     const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+//       prompt: prompt,
+//       max_tokens: 100,
+//       temperature: 0.7,
+//       n: 1,
+//       stop: '\n',
+//     }, {
+//       headers: {
+//         'Authorization': 'Bearer YOUR_API_KEY',
+//         'Content-Type': 'application/json',
+//       }
+//     });
+
+//     const generatedText = response.data.choices[0].text.trim();
+//     return generatedText;
+//   } catch (error) {
+//     console.error('Error sending prompt to GPT-3.5 API:', error);
+//     throw error;
+//   }
+// }
 
 // @route GET api/experiences/:name
 // @description Get single experience by name
