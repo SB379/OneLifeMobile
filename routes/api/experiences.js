@@ -5,7 +5,7 @@ const Experience = require('../../models/Experience');
 
 require('dotenv').config();
 
-import { Configuration, OpenAIAPI } from "openai";
+const { Configuration, OpenAIAPI } = require("openai");
 
 const configuration = new Configuration({
   organization: process.env.GPT_ORG,
