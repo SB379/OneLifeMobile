@@ -5,12 +5,12 @@ const Experience = require('../../models/Experience');
 
 require('dotenv').config();
 
-// const { Configuration, OpenAIAPI } = require("openai");
+const { Configuration, OpenAIAPI } = require("openai");
 
-// const configuration = new Configuration({
-//   organization: process.env.GPT_ORG,
-//   apiKey: process.env.GPT_KEY,
-// });
+const configuration = new Configuration({
+  organization: process.env.GPT_ORG,
+  apiKey: process.env.GPT_KEY,
+});
 
 // const openai = new OpenAIAPI(configuration);
 
