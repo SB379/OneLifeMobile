@@ -23,22 +23,24 @@ router.get('/test', (req,res) => res.send('experience route testing'));
 //@description Get all experiences
 //@access Public
 router.get('/', async (req, res) => {
-  try {
-    const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: `Given these five tags, give me a query for the Google Maps Places API: ${JSON.stringify(req.params.answers)}`
-        }
-      ]
-    });
 
-    res.json(response.data); // Send the response data to the frontend
-  } catch (error) {
-    console.log("Error from Experiences Screen:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+  console.log(req.params.answers);
+  // try {
+  //   const response = await openai.createChatCompletion({
+  //     model: "gpt-3.5-turbo",
+  //     messages: [
+  //       {
+  //         role: "user",
+  //         content: `Given these five tags, give me a query for the Google Maps Places API: ${JSON.stringify(req.params.answers)}`
+  //       }
+  //     ]
+  //   });
+
+  //   res.json(response.data); // Send the response data to the frontend
+  // } catch (error) {
+  //   console.log("Error from Experiences Screen:", error);
+  //   res.status(500).json({ error: "Internal server error" });
+  // }
 });
 
 
