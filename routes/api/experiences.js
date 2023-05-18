@@ -6,6 +6,7 @@ const Experience = require('../../models/Experience');
 require('dotenv').config();
 
 const { Configuration, OpenAIApi } = require("openai");
+const { response } = require('express');
 
 const configuration = new Configuration({
   organization: process.env.GPT_ORG,
@@ -22,26 +23,56 @@ router.get('/test', (req,res) => res.send('experience route testing'));
 //@route GET api/experiences
 //@description Get all experiences
 //@access Public
+const axios = require('axios');
+
 router.get('/', async (req, res) => {
+  try {
+    const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Given these five tags, give me a query for the Google Maps Places API: ${JSON.stringify(req.query.answers)}. Give it in the format x+y+... and nothing else`
+        }
+      ]
+    });
 
-  console.log(req.params.answers);
-  // try {
-  //   const response = await openai.createChatCompletion({
-  //     model: "gpt-3.5-turbo",
-  //     messages: [
-  //       {
-  //         role: "user",
-  //         content: `Given these five tags, give me a query for the Google Maps Places API: ${JSON.stringify(req.params.answers)}`
-  //       }
-  //     ]
-  //   });
+    const query = response.data.choices[0].message.content;
 
-  //   res.json(response.data); // Send the response data to the frontend
-  // } catch (error) {
-  //   console.log("Error from Experiences Screen:", error);
-  //   res.status(500).json({ error: "Internal server error" });
-  // }
+    const params = {
+      query: query,
+      location: `${req.query.location.latitude},${req.query.location.longitude}`,
+      radius: 450,
+      key: process.env.GOOGLE_API_KEY
+    };
+
+    const response2 = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
+
+    const places = response2.data.results.slice(0, 20).map(place => {
+      const addressComponents = place.formatted_address.split(", ");
+      const address = {
+        street: addressComponents[0],
+        city: addressComponents[1],
+        state: addressComponents[2].split(" ")[0],
+        zip: addressComponents[2].split(" ")[1],
+      };
+    
+      return {
+        name: place.name,
+        address: address,
+        url: place.url,
+        image_url: place.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : null
+      };
+    });
+    
+
+    res.json(places);
+  } catch (error) {
+    console.log("Error from Experiences Screen:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
+
 
 
 
