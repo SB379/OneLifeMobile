@@ -23,12 +23,12 @@ router.get('/test', (req,res) => res.send('experience route testing'));
 //@description Get all experiences
 //@access Public
 router.get('/', (req, res) => {
-  // const response = openai.createChatCompletion({
-  //   model: "gpt-3.5-turbo",
-  //   messages: [
-  //     {role: "user", content: "Given these five tags, give me a query for the Google Maps Places API: `${JSON.Stringify(req.params.answers)}`"}
-  //   ]
-  // })
+  const response = openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {role: "user", content: "Given these five tags, give me a query for the Google Maps Places API: `${JSON.Stringify(req.params.answers)}`"}
+    ]
+  })
 
   // res.json(response);
 });
