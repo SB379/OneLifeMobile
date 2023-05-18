@@ -12,7 +12,7 @@ const configuration = new Configuration({
   apiKey: process.env.GPT_KEY,
 });
 
-// const openai = new OpenAIAPI(configuration);
+const openai = new OpenAIAPI(configuration);
 
 //@route GET api/experiences/test
 //@description tests experiences route
