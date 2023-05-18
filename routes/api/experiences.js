@@ -5,14 +5,14 @@ const Experience = require('../../models/Experience');
 
 require('dotenv').config();
 
-const { Configuration, OpenAIAPI } = require("openai");
+const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
   organization: process.env.GPT_ORG,
   apiKey: process.env.GPT_KEY,
 });
 
-const openai = new OpenAIAPI(configuration);
+const openai = new OpenAIApi(configuration);
 
 //@route GET api/experiences/test
 //@description tests experiences route
