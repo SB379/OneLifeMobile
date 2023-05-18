@@ -5,14 +5,14 @@ const Experience = require('../../models/Experience');
 
 require('dotenv').config();
 
-const { Configuration, OpenAIAPI } = require("openai");
+// const { Configuration, OpenAIAPI } = require("openai");
 
-const configuration = new Configuration({
-  organization: process.env.GPT_ORG,
-  apiKey: process.env.GPT_KEY,
-});
+// const configuration = new Configuration({
+//   organization: process.env.GPT_ORG,
+//   apiKey: process.env.GPT_KEY,
+// });
 
-const openai = new OpenAIAPI(configuration);
+// const openai = new OpenAIAPI(configuration);
 
 //@route GET api/experiences/test
 //@description tests experiences route
@@ -23,14 +23,14 @@ router.get('/test', (req,res) => res.send('experience route testing'));
 //@description Get all experiences
 //@access Public
 router.get('/', (req, res) => {
-  const response = openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {role: "user", content: "Given these five tags, give me a query for the Google Maps Places API: `${JSON.Stringify(req.params.answers)}`"}
-    ]
-  })
+  // const response = openai.createChatCompletion({
+  //   model: "gpt-3.5-turbo",
+  //   messages: [
+  //     {role: "user", content: "Given these five tags, give me a query for the Google Maps Places API: `${JSON.Stringify(req.params.answers)}`"}
+  //   ]
+  // })
 
-  res.json(response);
+  // res.json(response);
 });
 
 // @route GET api/experiences/:id
