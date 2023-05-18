@@ -22,16 +22,26 @@ router.get('/test', (req,res) => res.send('experience route testing'));
 //@route GET api/experiences
 //@description Get all experiences
 //@access Public
-router.get('/', (req, res) => {
-  const response = openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {role: "user", content: "Given these five tags, give me a query for the Google Maps Places API: `${JSON.Stringify(req.params.answers)}`"}
-    ]
-  })
+router.get('/', async (req, res) => {
+  try {
+    const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Given these five tags, give me a query for the Google Maps Places API: ${JSON.stringify(req.params.answers)}`
+        }
+      ]
+    });
 
-  // res.json(response);
+    res.json(response.data); // Send the response data to the frontend
+  } catch (error) {
+    console.log("Error from Experiences Screen:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
+
+
 
 // @route GET api/experiences/:id
 // @description Get single experience by id
