@@ -72,6 +72,8 @@ router.get('/', async (req, res) => {
         image_url: place.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : null
       };
     });    
+
+    console.log(places);
     
     res.json(places);
   } catch (error) {
