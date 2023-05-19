@@ -26,6 +26,10 @@ router.get('/test', (req,res) => res.send('experience route testing'));
 const axios = require('axios');
 
 router.get('/', async (req, res) => {
+
+  // console.log(JSON.parse(req.query.location).coords.latitude);
+  // console.log(JSON.parse(req.query.location).coords.longitude);
+  // console.log(req.query.location);
   try {
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -39,16 +43,19 @@ router.get('/', async (req, res) => {
 
     const query = response.data.choices[0].message.content;
 
+    console.log(query);
+
     const params = {
       query: query,
-      location: `${req.query.location.latitude},${req.query.location.longitude}`,
-      radius: 450,
+      location: `${JSON.parse(req.query.location).coords.latitude}N,${JSON.parse(req.query.location).coords.longitude}W`,
+      // location: "39.01071742939369N, 125.73761570694917E",
+      radius: 10000,
       key: process.env.GOOGLE_API_KEY
-    };
+    };    
 
     const response2 = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
 
-    const places = response2.data.results.slice(0, 20).map(place => {
+    const places = response2.data.results.slice(0, 20).map((place, index) => {
       const addressComponents = place.formatted_address.split(", ");
       const address = {
         street: addressComponents[0],
@@ -58,14 +65,14 @@ router.get('/', async (req, res) => {
       };
     
       return {
+        id: index + 1, // Assigning the id based on the index (adding 1 to avoid 0-based index)
         name: place.name,
         address: address,
         url: place.url,
         image_url: place.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : null
       };
-    });
+    });    
     
-
     res.json(places);
   } catch (error) {
     console.log("Error from Experiences Screen:", error);
