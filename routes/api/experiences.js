@@ -49,7 +49,7 @@ router.get('/', async (req, res) => {
       query: query,
       location: `${JSON.parse(req.query.location).coords.longitude},${JSON.parse(req.query.location).coords.latitude}`,
       // location: "39.01071742939369N, 125.73761570694917E",
-      radius: 10000,
+      radius: 450,
       key: process.env.GOOGLE_API_KEY
     };    
     const response2 = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
