@@ -27,6 +27,8 @@ const axios = require('axios');
 
 router.get('/', async (req, res) => {
 
+  // console.log(req.query);
+
   // console.log(JSON.parse(req.query.location).coords.latitude);
   // console.log(JSON.parse(req.query.location).coords.longitude);
   // console.log(req.query.location);
@@ -43,8 +45,6 @@ router.get('/', async (req, res) => {
 
     const query = response.data.choices[0].message.content;
 
-    console.log(query);
-
     const params = {
       query: query,
       location: `${JSON.parse(req.query.location).coords.longitude}N,${JSON.parse(req.query.location).coords.latitude}W`,
@@ -52,7 +52,6 @@ router.get('/', async (req, res) => {
       radius: 10000,
       key: process.env.GOOGLE_API_KEY
     };    
-
     const response2 = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
 
     const places = response2.data.results.slice(0, 20).map((place, index) => {
@@ -73,7 +72,9 @@ router.get('/', async (req, res) => {
       };
     });    
 
-    console.log(places);
+  //37.33º N
+  //-122.03º W
+    // console.log(places);
     
     res.json(places);
   } catch (error) {
