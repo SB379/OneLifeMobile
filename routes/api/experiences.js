@@ -38,45 +38,110 @@ router.get('/', async (req, res) => {
       messages: [
         {
           role: "user",
-          content: `Given these five tags, give me a query for the Google Maps Places API: ${JSON.stringify(req.query.answers)}. Give it in the format x+y+... and nothing else`
+          content: `Can you provide me with three arrays containing queries for the Google Maps Places API? I would like the arrays to be grouped by itineraries of things I can do in the next two hours, and in the format [category1, category2, category3]. For example, [museum, thai food, speakeasy].`
         }
       ]
     });
 
     const query = response.data.choices[0].message.content;
 
-    const params = {
-      query: query,
-      location: `${JSON.parse(req.query.location).coords.latitude},${JSON.parse(req.query.location).coords.longitude}`,
-      // location: "39.01071742939369N, 125.73761570694917E",
-      radius: 450,
-      key: process.env.GOOGLE_API_KEY
-    };    
-    const response2 = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
+    console.log(query);
 
-    const places = response2.data.results.slice(0, 20).map((place, index) => {
-      const addressComponents = place.formatted_address.split(", ");
-      const address = {
-        street: addressComponents[0],
-        city: addressComponents[1],
-        state: addressComponents[2].split(" ")[0],
-        zip: addressComponents[2].split(" ")[1],
+    const regex = /\[([^\[\]]*)\]/g;
+    const matches = query.match(regex);
+
+    const itinerary1 = matches[0].slice(1, -1).split(',').map(item => item.trim());
+    const itinerary2 = matches[1].slice(1, -1).split(',').map(item => item.trim());
+    const itinerary3 = matches[2].slice(1, -1).split(',').map(item => item.trim());
+
+   // Function to call Google Places API and return a single result for each itinerary item
+    const getPlaces = async (itinerary) => {
+      const params = {
+        location: `${JSON.parse(req.query.location).coords.latitude},${JSON.parse(req.query.location).coords.longitude}`,
+        radius: 450,
+        key: process.env.GOOGLE_API_KEY
       };
+
+      const results = [];
+      for (const item of itinerary) {
+        const query = item.trim();
+
+        params.query = query;
+        const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
+        const place = response.data.results[0];
+
+        if (place) {
+          const addressComponents = place.formatted_address.split(", ");
+          const address = {
+            street: addressComponents[0],
+            city: addressComponents[1],
+            state: addressComponents[2].split(" ")[0],
+            zip: addressComponents[2].split(" ")[1],
+          };
+
+          results.push({
+            name: place.name,
+            address: address,
+            url: place.url,
+            image_url: place.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : null
+            // Add any other desired fields
+          });
+        }
+      }
+
+  return results;
+};
+
+
+    // Call Google Places API for each itinerary
+    const results1 = await getPlaces(itinerary1);
+    const results2 = await getPlaces(itinerary2);
+    const results3 = await getPlaces(itinerary3);
+
+    // Create the response object
+    const responseObject = {
+      itinerary1: results1,
+      itinerary2: results2,
+      itinerary3: results3
+    };
+
+    res.json(responseObject);
+
+    // console.log(responseObject);
+
+
+    // const params = {
+    //   query: query,
+    //   location: `${JSON.parse(req.query.location).coords.latitude},${JSON.parse(req.query.location).coords.longitude}`,
+    //   // location: "39.01071742939369N, 125.73761570694917E",
+    //   radius: 450,
+    //   key: process.env.GOOGLE_API_KEY
+    // };    
+    // const response2 = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
+
+    // const places = response2.data.results.slice(0, 20).map((place, index) => {
+    //   const addressComponents = place.formatted_address.split(", ");
+    //   const address = {
+    //     street: addressComponents[0],
+    //     city: addressComponents[1],
+    //     state: addressComponents[2].split(" ")[0],
+    //     zip: addressComponents[2].split(" ")[1],
+    //   };
     
-      return {
-        id: index + 1, // Assigning the id based on the index (adding 1 to avoid 0-based index)
-        name: place.name,
-        address: address,
-        url: place.url,
-        image_url: place.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : null
-      };
-    });    
+    //   return {
+    //     id: index + 1, // Assigning the id based on the index (adding 1 to avoid 0-based index)
+    //     name: place.name,
+    //     address: address,
+    //     url: place.url,
+    //     image_url: place.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : null
+    //   };
+    // });    
 
   //37.33º N
   //-122.03º W
     // console.log(places);
     
-    res.json(places);
+    // res.json(places);
   } catch (error) {
     console.log("Error from Experiences Screen:", error);
     res.status(500).json({ error: "Internal server error" });
