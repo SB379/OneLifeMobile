@@ -126,100 +126,100 @@ router.get('/name', async (req, res) => {
   }
 });
 
-const getPlaces = async (query, location) => {
-  const params = {
-    location: `${location.lat},${location.long}`,
-    radius: 10000,
-    key: process.env.GOOGLE_API_KEY,
-    query: query.trim() // Set the query parameter
-  };
+// const getPlaces = async (query, location) => {
+//   const params = {
+//     location: `${location.lat},${location.long}`,
+//     radius: 10000,
+//     key: process.env.GOOGLE_API_KEY,
+//     query: query.trim() // Set the query parameter
+//   };
 
-  const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
-  const places = response.data.results.slice(0, 3); // Get the first three places
+//   const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', { params });
+//   const places = response.data.results.slice(0, 3); // Get the first three places
 
-  const results = places.map((place) => {
-    const addressComponents = place.formatted_address.split(", ");
-    const address = {
-      street: addressComponents[0],
-      city: addressComponents[1],
-      state: addressComponents[2].split(" ")[0],
-      zip: addressComponents[2].split(" ")[1],
-    };
+//   const results = places.map((place) => {
+//     const addressComponents = place.formatted_address.split(", ");
+//     const address = {
+//       street: addressComponents[0],
+//       city: addressComponents[1],
+//       state: addressComponents[2].split(" ")[0],
+//       zip: addressComponents[2].split(" ")[1],
+//     };
 
-    return {
-      name: place.name,
-      address: address,
-      url: place.url,
-      image_url: place.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : null
-      // Add any other desired fields
-    };
-  });
+//     return {
+//       name: place.name,
+//       address: address,
+//       url: place.url,
+//       image_url: place.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_API_KEY}` : null
+//       // Add any other desired fields
+//     };
+//   });
 
-  return results;
-};
-
-
+//   return results;
+// };
 
 
-router.get('/itinerary', async (req, res) => {
-  
-  const { city, query } = req.query;
 
-  try {
-    let lat = "40.7128";
-    let long = "-74.0060";
 
-    const trimmedCity = city.replace(/"/g, "");
+// router.get('/itinerary', async (req, res) => {
 
-    if (trimmedCity === "New York City") {
-      lat = "40.7128";
-      long = "-74.0060";
-    } else if (trimmedCity === "Boston") {
-      lat = "42.3601";
-      long = "-71.0589";
-    } else if (trimmedCity === "Philadelphia") {
-      lat = "39.9526";
-      long = "-75.1652";
-    } else if (trimmedCity === "D.C.") {
-      lat = "38.9072";
-      long = "-77.0379";
-    } else if (trimmedCity === "San Francisco") {
-      lat = "37.7749";
-      long = "-122.4194";
-    } else if (trimmedCity === "San Diego") {
-      lat = "32.7157";
-      long = "-117.1611";
-    } else {
-      console.log("terminated here");
-      return res.status(400).json({ error: "Invalid city" });
-    }
+//   const { city, query } = req.query;
 
-    const location = { lat, long };
+//   try {
+//     let lat = "40.7128";
+//     let long = "-74.0060";
 
-    const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: `Give me something to do given this information. ${query}. What should I search for on Google Maps?`,
-        },
-      ],
-    });
+//     const trimmedCity = city.replace(/"/g, "");
 
-    const regex = /"([^"]*)"/;
-    const queryFromResponse = response.data.choices[0].message.content.match(regex)[1];
+//     if (trimmedCity === "New York City") {
+//       lat = "40.7128";
+//       long = "-74.0060";
+//     } else if (trimmedCity === "Boston") {
+//       lat = "42.3601";
+//       long = "-71.0589";
+//     } else if (trimmedCity === "Philadelphia") {
+//       lat = "39.9526";
+//       long = "-75.1652";
+//     } else if (trimmedCity === "D.C.") {
+//       lat = "38.9072";
+//       long = "-77.0379";
+//     } else if (trimmedCity === "San Francisco") {
+//       lat = "37.7749";
+//       long = "-122.4194";
+//     } else if (trimmedCity === "San Diego") {
+//       lat = "32.7157";
+//       long = "-117.1611";
+//     } else {
+//       console.log("terminated here");
+//       return res.status(400).json({ error: "Invalid city" });
+//     }
 
-    const places = await getPlaces(queryFromResponse, location);
+//     const location = { lat, long };
 
-    console.log(places);
+//     const response = await openai.createChatCompletion({
+//       model: "gpt-3.5-turbo",
+//       messages: [
+//         {
+//           role: "user",
+//           content: `Give me something to do given this information. ${query}. What should I search for on Google Maps?`,
+//         },
+//       ],
+//     });
 
-    res.json({ places });
+//     const regex = /"([^"]*)"/;
+//     const queryFromResponse = response.data.choices[0].message.content.match(regex)[1];
 
-  } catch (error) {
-    console.log("Error from Itinerary Screen: ", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+//     const places = await getPlaces(queryFromResponse, location);
+
+//     console.log(places);
+
+//     res.json({ places });
+
+//   } catch (error) {
+//     console.log("Error from Itinerary Screen: ", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 
 
 
