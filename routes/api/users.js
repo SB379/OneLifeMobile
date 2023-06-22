@@ -41,7 +41,7 @@ router.get('/', (req, res) => {
           lastName: user.lastName,
           email: user.email,
           password: user.password,
-          saved: [],
+          isUpgraded: false,
         });
   
         await dbUser.save();
